@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Kotlin Movie App</string>
+
+    <!--Menu names-->
+    <string name="popular_movies">Popular Movies</string>
+    <string name="top_rated_movies">Top Rated Movies</string>
+    <string name="favourite_movies">Favourites</string>
+
+</resources>
