@@ -14,7 +14,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/no_photo"
-                app:imageUrl="@{movieViewModel}"
+                app:imageUrl="@{movieViewModel.getMoviePosterImage}"
                 android:id="@+id/movie_poster_imageview"
                 android:scaleType="fitXY"
                 android:adjustViewBounds="true"/>

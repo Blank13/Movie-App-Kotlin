@@ -38,4 +38,8 @@ class MoviesPostersViewModel: BaseViewModel() {
             }
         }
     }
+
+    fun getMovieViewModelForPosterAt(position: Int) : MovieViewModel {
+        return moviesViewModels[position]
+    }
 }

@@ -4,7 +4,7 @@
 
     <data>
         <variable
-                name="view"
+                name="postersView"
                 type="com.mes.example.kotlinmovieapp.view.moviesposters.MoviesPostersFragment" />
         <variable
                 name="moviesViewModel"
@@ -20,7 +20,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:movieslist="@{moviesViewModel.moviesViewModels}"
-                app:listener="@{view}"
+                app:listener="@{postersView}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

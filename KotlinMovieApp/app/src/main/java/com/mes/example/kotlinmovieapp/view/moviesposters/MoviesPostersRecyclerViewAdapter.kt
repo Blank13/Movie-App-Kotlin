@@ -13,6 +13,7 @@ import com.mes.example.kotlinmovieapp.viewmodels.MovieViewModel
 class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<MoviePosterViewHolder>() {
 
     var moviesViewModels: ObservableArrayList<MovieViewModel> = ObservableArrayList()
+    var postersFragment: MoviesPostersFragment? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviePosterViewHolder {
         val itemBinding = DataBindingUtil.inflate<ItemMoviePosterBinding>(LayoutInflater.from(parent.context),
@@ -26,6 +27,7 @@ class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<MoviePosterViewHold
 
     override fun onBindViewHolder(viewHolder: MoviePosterViewHolder, position: Int) {
         viewHolder.binding?.setVariable(BR.movieViewModel, moviesViewModels[position])
+        viewHolder.binding?.root?.setOnClickListener { postersFragment?.onPosterSelected(position) }
     }
 
 }

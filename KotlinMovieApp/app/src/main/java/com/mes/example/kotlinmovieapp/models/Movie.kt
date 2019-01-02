@@ -1,6 +1,7 @@
 package com.mes.example.kotlinmovieapp.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Movie(
     val adult: Boolean = false,
@@ -25,4 +26,4 @@ data class Movie(
     val voteAverage: Double = 0.0,
     @SerializedName("vote_count")
     val voteCount: Int = 0
-)
+) : Serializable

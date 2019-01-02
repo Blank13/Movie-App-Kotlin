@@ -15,6 +15,7 @@ fun setItems(recyclerView: RecyclerView, moviesViewModels: ObservableArrayList<M
         moviesAdapter = MoviesPostersRecyclerViewAdapter()
         recyclerView.adapter = moviesAdapter
     }
+    moviesAdapter.postersFragment = fragment
     moviesAdapter.moviesViewModels = moviesViewModels
     moviesAdapter.notifyDataSetChanged()
 }

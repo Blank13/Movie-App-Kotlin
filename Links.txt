@@ -1,0 +1,5 @@
+https://blog.philipphauer.de/clean-code-kotlin/
+
+https://github.com/raywenderlich/kotlin-style-guide
+
+https://www.raywenderlich.com/470-common-design-patterns-for-android-with-kotlin
