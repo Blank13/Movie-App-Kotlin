@@ -6,9 +6,7 @@ import android.view.View
 import com.mes.example.kotlinmovieapp.databinding.ItemMoviePosterBinding
 
 class MoviePosterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    var binding: ItemMoviePosterBinding?
 
-    init {
-        binding = DataBindingUtil.bind(view)
-    }
+    var binding: ItemMoviePosterBinding? = DataBindingUtil.bind(view)
+
 }

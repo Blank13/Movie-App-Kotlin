@@ -35,7 +35,6 @@ class MoviesPostersFragment: Fragment() {
             lifecycle.addObserver(moviesPostersViewModel)
             binding?.setLifecycleOwner(this)
         }
-        moviesPostersViewModel.updateMovies()
         return binding?.root
     }
 

@@ -15,11 +15,11 @@
         <activity android:name=".view.moviesposters.MoviesPostersActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".view.moviedetail.MovieDetailActivity">
+        <activity android:name=".view.moviedetail.MovieDetailActivity"
+                  android:parentActivityName=".view.moviesposters.MoviesPostersActivity">
         </activity>
     </application>
 

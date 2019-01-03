@@ -30,4 +30,19 @@ class MoviesRepository {
             )
     }
 
+    @SuppressLint("CheckResult")
+    fun getDurationOfMovie(id: Int, completion: (duration: Int) -> Unit) {
+        val moviesApiHelper = RetrofitHelper.getRetrofitForUrl(BASE_URL).create(MoviesApiHelper::class.java)
+        moviesApiHelper.getDurationForMovie(id).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { movieDetail ->
+                    completion(movieDetail.runtime ?: 0)
+                },
+                { error ->
+                    Log.d(LOGGER_TAG, error.localizedMessage)
+                }
+            )
+    }
+
 }

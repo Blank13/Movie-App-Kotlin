@@ -9,14 +9,14 @@ import java.io.Serializable
 open class BaseViewModel: BaseObservable(), LifecycleObserver, Serializable {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() {}
+    open fun onCreate() {}
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun onResume() {}
+    open fun onResume() {}
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun onPause() {}
+    open fun onPause() {}
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onStop() {}
+    open fun onStop() {}
 }

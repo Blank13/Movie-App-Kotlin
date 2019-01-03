@@ -6,9 +6,9 @@ import java.io.Serializable
 
 class MovieViewModel(private val movie: Movie): BaseViewModel(), Serializable {
 
+    var id = movie.id
     var title = movie.title
     var date = movie.releaseDate
-    var duration = 0
     var rate = movie.voteAverage
     var description = movie.overview
 

@@ -26,7 +26,7 @@ class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<MoviePosterViewHold
     }
 
     override fun onBindViewHolder(viewHolder: MoviePosterViewHolder, position: Int) {
-        viewHolder.binding?.setVariable(BR.movieViewModel, moviesViewModels[position])
+        viewHolder.binding?.movieViewModel = moviesViewModels[position]
         viewHolder.binding?.root?.setOnClickListener { postersFragment?.onPosterSelected(position) }
     }
 
