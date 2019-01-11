@@ -1,34 +1,43 @@
 package com.mes.example.kotlinmovieapp.viewmodels
 
 import android.databinding.ObservableArrayList
+import android.databinding.ObservableBoolean
 import android.util.Log
-import com.mes.example.kotlinmovieapp.common.BaseViewModel
+import android.widget.Toast
+import com.mes.example.kotlinmovieapp.MovieApp
 import com.mes.example.kotlinmovieapp.data.MoviesRepository
 import com.mes.example.kotlinmovieapp.utils.LOGGER_TAG
 import com.mes.example.kotlinmovieapp.utils.SortTypes
 import io.reactivex.Observable.fromArray
+import java.io.Serializable
 
-class MoviesPostersViewModel: BaseViewModel() {
+class MoviesPostersViewModel: Serializable {
 
     var moviesViewModels: ObservableArrayList<MovieViewModel> = ObservableArrayList()
-
-    override fun onCreate() {
-        super.onCreate()
-        updateMovies()
-    }
+    var isLoading = ObservableBoolean(false)
+    var sortType = SortTypes.PopularDec
+    private var lastSortType = SortTypes.PopularDec
+    private var pageNumber = 1
 
     fun updateMovies() {
-        MoviesRepository().getMovies(SortTypes.PopularDec, 1) { movies, error ->
-            if (movies != null && error == null) {
+        if (sortType != lastSortType) {
+            lastSortType = sortType
+            moviesViewModels.clear()
+            pageNumber = 1
+        }
+        isLoading.set(true)
+        MoviesRepository().getMovies(pageNumber, sortType,
+            { movies ->
                 fromArray(movies).flatMapIterable { movies }
                     .map { MovieViewModel(it) }
                     .toList()
                     .subscribe { moviesList -> moviesViewModels.addAll(moviesList) }
-            }
-            else {
+                isLoading.set(false)
+            }, { error ->
                 Log.e(LOGGER_TAG, error)
-            }
-        }
+                Toast.makeText(MovieApp.context, error, Toast.LENGTH_LONG).show()
+                isLoading.set(false)
+            })
     }
 
     fun getMovieViewModelForPosterAt(position: Int) : MovieViewModel {

@@ -1,10 +1,12 @@
 package com.mes.example.kotlinmovieapp.viewmodels
 
 import android.databinding.ObservableField
-import com.mes.example.kotlinmovieapp.common.BaseViewModel
+import android.util.Log
 import com.mes.example.kotlinmovieapp.data.MoviesRepository
+import com.mes.example.kotlinmovieapp.utils.LOGGER_TAG
+import java.io.Serializable
 
-class MovieDetailViewModel(private val movieViewModel: MovieViewModel?): BaseViewModel() {
+class MovieDetailViewModel(private val movieViewModel: MovieViewModel?): Serializable {
 
     var title = ObservableField<String>(movieViewModel?.title)
     var date = ObservableField<String>(movieViewModel?.date)
@@ -17,8 +19,8 @@ class MovieDetailViewModel(private val movieViewModel: MovieViewModel?): BaseVie
     }
 
     fun getMovieDuration() {
-        MoviesRepository().getDurationOfMovie(movieViewModel?.id ?: 0) { duration ->
-            this.duration.set("$duration min")
-        }
+        MoviesRepository().getDurationOfMovie(movieViewModel?.id ?: 0,
+            { duration -> this.duration.set("$duration min") },
+            { error -> Log.d(LOGGER_TAG, error) })
     }
 }

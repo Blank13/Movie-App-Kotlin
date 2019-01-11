@@ -1,10 +1,9 @@
 package com.mes.example.kotlinmovieapp.viewmodels
 
-import com.mes.example.kotlinmovieapp.common.BaseViewModel
 import com.mes.example.kotlinmovieapp.models.Movie
 import java.io.Serializable
 
-class MovieViewModel(private val movie: Movie): BaseViewModel(), Serializable {
+class MovieViewModel(private val movie: Movie): Serializable {
 
     var id = movie.id
     var title = movie.title

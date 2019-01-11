@@ -8,7 +8,7 @@
                 type="com.mes.example.kotlinmovieapp.viewmodels.MovieViewModel"/>
     </data>
 
-<android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+    <android.support.constraint.ConstraintLayout android:layout_width="match_parent"
                                              android:layout_height="wrap_content">
         <ImageView
                 android:layout_width="match_parent"
