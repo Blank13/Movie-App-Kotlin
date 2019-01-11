@@ -3,9 +3,8 @@ package com.mes.example.kotlinmovieapp.viewmodels
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableBoolean
 import android.util.Log
-import android.widget.Toast
-import com.mes.example.kotlinmovieapp.MovieApp
 import com.mes.example.kotlinmovieapp.data.MoviesRepository
+import com.mes.example.kotlinmovieapp.delegates.MoviesPostersFragmentDelegate
 import com.mes.example.kotlinmovieapp.utils.LOGGER_TAG
 import com.mes.example.kotlinmovieapp.utils.SortTypes
 import io.reactivex.Observable.fromArray
@@ -16,6 +15,8 @@ class MoviesPostersViewModel: Serializable {
     var moviesViewModels: ObservableArrayList<MovieViewModel> = ObservableArrayList()
     var isLoading = ObservableBoolean(false)
     var sortType = SortTypes.PopularDec
+    var moviesPostersFragmentDelegate: MoviesPostersFragmentDelegate? = null
+
     private var lastSortType = SortTypes.PopularDec
     private var pageNumber = 1
 
@@ -26,6 +27,7 @@ class MoviesPostersViewModel: Serializable {
             pageNumber = 1
         }
         isLoading.set(true)
+        println("Going to Request Page: " + pageNumber)
         MoviesRepository().getMovies(pageNumber, sortType,
             { movies ->
                 fromArray(movies).flatMapIterable { movies }
@@ -33,9 +35,12 @@ class MoviesPostersViewModel: Serializable {
                     .toList()
                     .subscribe { moviesList -> moviesViewModels.addAll(moviesList) }
                 isLoading.set(false)
+                println("Finished Requesting Page: " + pageNumber)
+                pageNumber++
             }, { error ->
                 Log.e(LOGGER_TAG, error)
-                Toast.makeText(MovieApp.context, error, Toast.LENGTH_LONG).show()
+                println(error)
+                moviesPostersFragmentDelegate?.onGetingMoviesError(error)
                 isLoading.set(false)
             })
     }

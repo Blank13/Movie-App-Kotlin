@@ -14,6 +14,7 @@ import android.widget.Toast
 import com.jakewharton.rxbinding2.support.v7.widget.scrollEvents
 import com.mes.example.kotlinmovieapp.R
 import com.mes.example.kotlinmovieapp.databinding.FragmentMoviesPostersBinding
+import com.mes.example.kotlinmovieapp.delegates.MoviesPostersFragmentDelegate
 import com.mes.example.kotlinmovieapp.utils.LOGGER_TAG
 import com.mes.example.kotlinmovieapp.view.moviedetail.MovieDetailActivity
 import com.mes.example.kotlinmovieapp.viewmodels.MoviesPostersViewModel
@@ -22,11 +23,14 @@ class MoviesPostersFragment: Fragment() {
 
     private lateinit var binding: FragmentMoviesPostersBinding
     private var moviesPostersViewModel: MoviesPostersViewModel = MoviesPostersViewModel()
+    private val delegate = object : MoviesPostersFragmentDelegate {
+        override fun onGetingMoviesError(error: String) {
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (savedInstanceState != null) {
-            Log.d(LOGGER_TAG,"HAHAHA It wasn't empty : " + savedInstanceState.toString())
-        }
+        moviesPostersViewModel.moviesPostersFragmentDelegate = delegate
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movies_posters, container, false)
         binding.moviesRecyclerview.adapter = MoviesPostersRecyclerViewAdapter()
         binding.moviesRecyclerview.layoutManager = GridLayoutManager(context, 2)
@@ -38,19 +42,15 @@ class MoviesPostersFragment: Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 recyclerView.layoutManager?.let {
-                    val totalHeight = it.height
-                    val itemHeight = totalHeight / (it.itemCount / 2)
-                    if (dy > totalHeight - (itemHeight * 2)) {
-                        Toast.makeText(context,"Reach Before End from Scrolling", Toast.LENGTH_LONG).show()
+                    val visibleCount = it.childCount
+                    val totalCount = it.itemCount
+                    val firstVisibleItem = (it as GridLayoutManager).findFirstVisibleItemPosition()
+                    if (visibleCount + firstVisibleItem > totalCount - 4) {
+                        if (!moviesPostersViewModel.isLoading.get()){
+                            Toast.makeText(context,"Reach Before End from Scrolling", Toast.LENGTH_LONG).show()
+                            moviesPostersViewModel.updateMovies()
+                        }
                     }
-                }
-
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)) {
-                    Toast.makeText(context,"Reach End from StateChanged", Toast.LENGTH_LONG).show()
                 }
             }
         })
