@@ -16,6 +16,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <android.support.v7.widget.RecyclerView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/movies_recyclerview"
+                app:movieslist="@{moviesViewModel.moviesViewModels}"
+                app:listener="@{postersView}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+        >
+        </android.support.v7.widget.RecyclerView>
         <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -23,20 +34,9 @@
                 android:visibility="@{moviesViewModel.isLoading ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movies_recyclerview"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <android.support.v7.widget.RecyclerView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:id="@+id/movies_recyclerview"
-                app:movieslist="@{moviesViewModel.moviesViewModels}"
-                app:listener="@{postersView}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-        </android.support.v7.widget.RecyclerView>
 
     </android.support.constraint.ConstraintLayout>
 

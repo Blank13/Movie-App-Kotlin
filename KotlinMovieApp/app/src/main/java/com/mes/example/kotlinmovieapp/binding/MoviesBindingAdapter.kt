@@ -7,15 +7,16 @@ import com.mes.example.kotlinmovieapp.view.moviesposters.MoviesPostersFragment
 import com.mes.example.kotlinmovieapp.view.moviesposters.MoviesPostersRecyclerViewAdapter
 import com.mes.example.kotlinmovieapp.viewmodels.MovieViewModel
 
-@BindingAdapter(value = ["movieslist", "listener"])
+@BindingAdapter(value = ["movieslist", "listener"], requireAll = true)
 fun setItems(recyclerView: RecyclerView, moviesViewModels: ObservableArrayList<MovieViewModel>,
              fragment: MoviesPostersFragment) {
-    var moviesAdapter: MoviesPostersRecyclerViewAdapter? = recyclerView.adapter as MoviesPostersRecyclerViewAdapter
+    var moviesAdapter: MoviesPostersRecyclerViewAdapter? = recyclerView.adapter as? MoviesPostersRecyclerViewAdapter
     if (moviesAdapter == null) {
         moviesAdapter = MoviesPostersRecyclerViewAdapter()
         recyclerView.adapter = moviesAdapter
+        moviesAdapter.moviesViewModels = moviesViewModels
+        moviesAdapter.postersFragment = fragment
     }
-    moviesAdapter.postersFragment = fragment
-    moviesAdapter.moviesViewModels = moviesViewModels
+
     moviesAdapter.notifyDataSetChanged()
 }
