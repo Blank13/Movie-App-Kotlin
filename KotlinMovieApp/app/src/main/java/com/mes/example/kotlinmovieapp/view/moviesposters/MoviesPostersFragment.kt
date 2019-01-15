@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.GridLayoutManager.SpanSizeLookup
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,16 +29,29 @@ class MoviesPostersFragment: Fragment(), MoviesPostersFragmentDelegate {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         moviesPostersViewModel.moviesPostersFragmentDelegate = delegate
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movies_posters, container, false)
-        binding.moviesRecyclerview.layoutManager = GridLayoutManager(context, 2)
+        val layoutManager = GridLayoutManager(context,2)
+        layoutManager.spanSizeLookup = object: SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                when (binding.moviesRecyclerview.adapter?.getItemViewType(position) ?: 0) {
+                    MoviesPostersRecyclerViewAdapter.PostersViewHolderTypes.Loader.value -> return 2
+                    else -> return 1
+                }
+            }
+        }
+        binding.moviesRecyclerview.layoutManager = layoutManager
         binding.postersView = this
         binding.moviesViewModel = moviesPostersViewModel
         moviesPostersViewModel.updateMovies()
 
         binding.moviesRecyclerview.scrollStateChanges().subscribe {
-//            Toast.makeText(context,"$it",Toast.LENGTH_SHORT).show()
-            if (!binding.moviesRecyclerview.canScrollVertically(1)) {
+            ((binding.moviesRecyclerview.layoutManager) as? GridLayoutManager)?.let {gridLayoutManager ->
                 if (!moviesPostersViewModel.isLoading.get()){
-                    moviesPostersViewModel.updateMovies()
+                    val totalItemsCount = gridLayoutManager.itemCount
+                    val visibleItemsCount = gridLayoutManager.childCount
+                    val firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition()
+                    if (visibleItemsCount + firstVisibleItem >= totalItemsCount - 2) {
+                        moviesPostersViewModel.updateMovies()
+                    }
                 }
             }
         }

@@ -3,15 +3,21 @@ package com.mes.example.kotlinmovieapp.view.moviesposters
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableArrayList
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.ViewHolder
+import android.support.v7.widget.RecyclerView.inflate
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.mes.example.kotlinmovieapp.R
+import com.mes.example.kotlinmovieapp.common.LoadingViewHolder
 import com.mes.example.kotlinmovieapp.databinding.ItemMoviePosterBinding
+import com.mes.example.kotlinmovieapp.utils.LOGGER_TAG
 import com.mes.example.kotlinmovieapp.viewmodels.MovieViewModel
 
-class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<MoviePosterViewHolder>() {
+class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
 
-    private enum class ViewHolderTypes(val value: Int) {
+    enum class PostersViewHolderTypes(val value: Int) {
         Poster(0),
         Loader(1)
     }
@@ -19,32 +25,40 @@ class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<MoviePosterViewHold
     var moviesViewModels: ObservableArrayList<MovieViewModel> = ObservableArrayList()
     var postersFragment: MoviesPostersFragment? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviePosterViewHolder {
-//        when (viewType) {
-//            ViewHolderTypes.Poster.value -> {
-//                val itemBinding = DataBindingUtil.inflate<ItemMoviePosterBinding>(LayoutInflater.from(parent.context),
-//                    R.layout.item_movie_poster, parent, false)
-//            }
-//            ViewHolderTypes.Loader.value -> {
-//
-//            }
-//        }
-        val itemBinding = DataBindingUtil.inflate<ItemMoviePosterBinding>(LayoutInflater.from(parent.context),
-            R.layout.item_movie_poster, parent, false)
-        return MoviePosterViewHolder(itemBinding.root)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        when (viewType) {
+            PostersViewHolderTypes.Loader.value -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false)
+                return LoadingViewHolder(view)
+            }
+            PostersViewHolderTypes.Poster.value -> {
+                val itemBinding = DataBindingUtil.inflate<ItemMoviePosterBinding>(LayoutInflater.from(parent.context),
+                    R.layout.item_movie_poster, parent, false)
+                return MoviePosterViewHolder(itemBinding.root)
+            }
+        }
+        return object: ViewHolder(View(parent.context)){}
     }
 
     override fun getItemCount(): Int {
-        return moviesViewModels.size
+        return moviesViewModels.size + 1
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == moviesViewModels.size - 1) ViewHolderTypes.Loader.value else ViewHolderTypes.Poster.value
+        return if (position == moviesViewModels.size) PostersViewHolderTypes.Loader.value
+        else PostersViewHolderTypes.Poster.value
     }
 
-    override fun onBindViewHolder(viewHolder: MoviePosterViewHolder, position: Int) {
-        viewHolder.binding?.movieViewModel = moviesViewModels[position]
-        viewHolder.binding?.root?.setOnClickListener { postersFragment?.onPosterSelected(position) }
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        if  (getItemViewType(position) == MoviesPostersRecyclerViewAdapter.PostersViewHolderTypes.Poster.value) {
+            (viewHolder as? MoviePosterViewHolder)?.let { moviePosterViewHolder ->
+                moviePosterViewHolder.binding?.movieViewModel = moviesViewModels[position]
+                moviePosterViewHolder.binding?.root?.setOnClickListener { postersFragment?.onPosterSelected(position) }
+            }
+        }
+        else{
+            Log.d(LOGGER_TAG,"position of loader = $position")
+        }
     }
 
 }
