@@ -1,15 +1,12 @@
 package com.mes.example.kotlinmovieapp
 
 import android.app.Application
-import android.content.Context
+import io.realm.Realm
 
 class MovieApp : Application() {
-    companion object {
-        lateinit var context: Context
-    }
 
     override fun onCreate() {
-        context = applicationContext
+        Realm.init(applicationContext)
         super.onCreate()
     }
 }

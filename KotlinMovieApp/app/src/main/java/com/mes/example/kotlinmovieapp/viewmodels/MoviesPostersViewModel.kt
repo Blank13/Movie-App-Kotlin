@@ -17,8 +17,35 @@ class MoviesPostersViewModel: Serializable {
     var sortType = SortTypes.PopularDec
     var moviesPostersFragmentDelegate: MoviesPostersFragmentDelegate? = null
 
+    var isLoaderNeeded = ObservableBoolean(true)
     private var lastSortType = SortTypes.PopularDec
+//    set(value) {
+//        if (value == SortTypes.None) {
+//            isLoaderNeeded.set(false)
+//        }
+//        else {
+//            isLoaderNeeded.set(true)
+//        }
+//    }
     private var pageNumber = 1
+
+    fun getMovies(){
+        moviesViewModels.clear()
+        MoviesRepository().getMoviesFromDB({ movies ->
+            fromArray(movies).flatMapIterable { movies }
+                .map { MovieViewModel(it) }
+                .toList()
+                .subscribe { moviesList ->
+                    moviesViewModels.addAll(moviesList)
+                    isLoaderNeeded.set(false)
+                }
+            isLoading.set(false)
+        },{ error ->
+            Log.e(LOGGER_TAG, error)
+            println(error)
+            moviesPostersFragmentDelegate?.onGetingMoviesError(error)
+        })
+    }
 
     fun updateMovies() {
         if (sortType != lastSortType) {
@@ -27,15 +54,18 @@ class MoviesPostersViewModel: Serializable {
             pageNumber = 1
         }
         isLoading.set(true)
-        println("Going to Request Page: " + pageNumber)
+        println("Going to Request Page: $pageNumber")
         MoviesRepository().getMovies(pageNumber, sortType,
             { movies ->
                 fromArray(movies).flatMapIterable { movies }
                     .map { MovieViewModel(it) }
                     .toList()
-                    .subscribe { moviesList -> moviesViewModels.addAll(moviesList) }
+                    .subscribe { moviesList ->
+                        moviesViewModels.addAll(moviesList)
+                        isLoaderNeeded.set(true)
+                    }
                 isLoading.set(false)
-                println("Finished Requesting Page: " + pageNumber)
+                println("Finished Requesting Page: $pageNumber")
                 pageNumber++
             }, { error ->
                 Log.e(LOGGER_TAG, error)

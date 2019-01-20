@@ -6,5 +6,7 @@
     <string name="top_rated_movies">Top Rated Movies</string>
     <string name="favourite_movies">Favourites</string>
     <string name="loading">Loading...</string>
+    <string name="trailers_title">Trailers</string>
+    <string name="save_to_favourite">Save To Favourite</string>
 
 </resources>

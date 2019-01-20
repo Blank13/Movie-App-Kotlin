@@ -1,17 +1,30 @@
 package com.mes.example.kotlinmovieapp.viewmodels
 
 import com.mes.example.kotlinmovieapp.models.Movie
+import com.mes.example.kotlinmovieapp.models.Trailer
 import java.io.Serializable
 
 class MovieViewModel(private val movie: Movie): Serializable {
 
-    var id = movie.id
-    var title = movie.title
-    var date = movie.releaseDate
-    var rate = movie.voteAverage
-    var description = movie.overview
+    val id = movie.id
+    val title = movie.title
+    val date = movie.releaseDate
+    val rate = movie.voteAverage
+    val description = movie.overview
+    var duration = movie.duration
+    set(value) {
+        movie.duration = value
+    }
+
+    fun setTrailers(trailers: List<Trailer>) {
+//        movie.trailers?.addAll(trailers)
+    }
+
+    fun getMovie(): Movie {
+        return movie
+    }
 
     fun getMoviePosterImage(): String {
-        return movie.posterPath
+        return "http://image.tmdb.org/t/p/w185/${movie.posterPath}"
     }
 }

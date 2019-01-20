@@ -1,7 +1,7 @@
 package com.mes.example.kotlinmovieapp.view.moviesposters
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import com.mes.example.kotlinmovieapp.R
 import com.mes.example.kotlinmovieapp.utils.POSTERS_FRAGMENT_TAG
@@ -21,8 +21,8 @@ class MoviesPostersActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_movie_posters, menu)
-        return super.onCreateOptionsMenu(menu)
+//        menuInflater.inflate(R.menu.menu_movie_posters, menu)
+        return true
     }
 
 }

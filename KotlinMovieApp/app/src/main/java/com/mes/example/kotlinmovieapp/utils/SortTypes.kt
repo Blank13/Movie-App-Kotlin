@@ -14,5 +14,6 @@ enum class SortTypes(val value: String) {
     OriginalTitleAsc("original_title.asc"),
     OriginalTitleDec("original_title.desc"),
     VoteCountAsc("vote_count.asc"),
-    VoteCountDec("vote_count.desc")
+    VoteCountDec("vote_count.desc"),
+    None("None")
 }

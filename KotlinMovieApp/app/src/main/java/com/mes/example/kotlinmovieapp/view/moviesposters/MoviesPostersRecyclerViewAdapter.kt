@@ -2,17 +2,15 @@ package com.mes.example.kotlinmovieapp.view.moviesposters
 
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableArrayList
+import android.databinding.ObservableBoolean
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
-import android.support.v7.widget.RecyclerView.inflate
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mes.example.kotlinmovieapp.R
 import com.mes.example.kotlinmovieapp.common.LoadingViewHolder
 import com.mes.example.kotlinmovieapp.databinding.ItemMoviePosterBinding
-import com.mes.example.kotlinmovieapp.utils.LOGGER_TAG
 import com.mes.example.kotlinmovieapp.viewmodels.MovieViewModel
 
 class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
@@ -24,6 +22,7 @@ class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
 
     var moviesViewModels: ObservableArrayList<MovieViewModel> = ObservableArrayList()
     var postersFragment: MoviesPostersFragment? = null
+    var isLoaderNeeded: ObservableBoolean = ObservableBoolean(true)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         when (viewType) {
@@ -41,7 +40,7 @@ class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return moviesViewModels.size + 1
+        return moviesViewModels.size + if (isLoaderNeeded.get()) 1 else 0
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -55,9 +54,6 @@ class MoviesPostersRecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
                 moviePosterViewHolder.binding?.movieViewModel = moviesViewModels[position]
                 moviePosterViewHolder.binding?.root?.setOnClickListener { postersFragment?.onPosterSelected(position) }
             }
-        }
-        else{
-            Log.d(LOGGER_TAG,"position of loader = $position")
         }
     }
 

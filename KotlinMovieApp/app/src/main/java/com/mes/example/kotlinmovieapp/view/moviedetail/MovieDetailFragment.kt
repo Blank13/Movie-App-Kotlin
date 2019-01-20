@@ -3,6 +3,7 @@ package com.mes.example.kotlinmovieapp.view.moviedetail
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,13 +19,15 @@ class MovieDetailFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movie_detail,container, false)
-        val intent = activity?.intent
-        intent?.extras?.let {
-            val movieViewModel = it["MovieViewModel"] as MovieViewModel?
+        activity?.intent?.extras?.let { extras ->
+            val movieViewModel = extras["MovieViewModel"] as? MovieViewModel?
             movieDetailViewModel = MovieDetailViewModel(movieViewModel)
         }
+        binding.trailersRecyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
         binding.movieDetailViewModel = movieDetailViewModel
         movieDetailViewModel.getMovieDuration()
+        movieDetailViewModel.getTrailers()
         return binding.root
     }
 }
