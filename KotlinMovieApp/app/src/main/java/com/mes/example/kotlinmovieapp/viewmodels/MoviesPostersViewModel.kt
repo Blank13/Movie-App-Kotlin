@@ -8,6 +8,8 @@ import com.mes.example.kotlinmovieapp.delegates.MoviesPostersFragmentDelegate
 import com.mes.example.kotlinmovieapp.utils.LOGGER_TAG
 import com.mes.example.kotlinmovieapp.utils.SortTypes
 import io.reactivex.Observable.fromArray
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.io.Serializable
 
 class MoviesPostersViewModel: Serializable {
@@ -16,25 +18,22 @@ class MoviesPostersViewModel: Serializable {
     var isLoading = ObservableBoolean(false)
     var sortType = SortTypes.PopularDec
     var moviesPostersFragmentDelegate: MoviesPostersFragmentDelegate? = null
-
     var isLoaderNeeded = ObservableBoolean(true)
+
+    private val moviesRepository = MoviesRepository()
     private var lastSortType = SortTypes.PopularDec
-//    set(value) {
-//        if (value == SortTypes.None) {
-//            isLoaderNeeded.set(false)
-//        }
-//        else {
-//            isLoaderNeeded.set(true)
-//        }
-//    }
     private var pageNumber = 1
 
     fun getMovies(){
+        lastSortType = sortType
         moviesViewModels.clear()
-        MoviesRepository().getMoviesFromDB({ movies ->
+        isLoaderNeeded.set(true)
+        moviesRepository.getMovies({ movies ->
             fromArray(movies).flatMapIterable { movies }
                 .map { MovieViewModel(it) }
                 .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { moviesList ->
                     moviesViewModels.addAll(moviesList)
                     isLoaderNeeded.set(false)
@@ -43,6 +42,7 @@ class MoviesPostersViewModel: Serializable {
         },{ error ->
             Log.e(LOGGER_TAG, error)
             println(error)
+            isLoaderNeeded.set(false)
             moviesPostersFragmentDelegate?.onGetingMoviesError(error)
         })
     }
@@ -54,15 +54,15 @@ class MoviesPostersViewModel: Serializable {
             pageNumber = 1
         }
         isLoading.set(true)
+        isLoaderNeeded.set(true)
         println("Going to Request Page: $pageNumber")
-        MoviesRepository().getMovies(pageNumber, sortType,
+        moviesRepository.updateMovies(pageNumber, sortType,
             { movies ->
                 fromArray(movies).flatMapIterable { movies }
                     .map { MovieViewModel(it) }
                     .toList()
                     .subscribe { moviesList ->
                         moviesViewModels.addAll(moviesList)
-                        isLoaderNeeded.set(true)
                     }
                 isLoading.set(false)
                 println("Finished Requesting Page: $pageNumber")
@@ -71,11 +71,12 @@ class MoviesPostersViewModel: Serializable {
                 Log.e(LOGGER_TAG, error)
                 println(error)
                 moviesPostersFragmentDelegate?.onGetingMoviesError(error)
+                isLoaderNeeded.set(false)
                 isLoading.set(false)
             })
     }
 
-    fun getMovieViewModelForPosterAt(position: Int) : MovieViewModel {
-        return moviesViewModels[position]
+    fun getMovieDetailViewModelForPosterAt(position: Int) : MovieDetailViewModel {
+        return MovieDetailViewModel(moviesViewModels[position].getMovie())
     }
 }

@@ -9,8 +9,10 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup
 import android.view.*
 import android.widget.Toast
+import com.google.gson.Gson
 import com.jakewharton.rxbinding2.support.v7.widget.scrollStateChanges
 import com.mes.example.kotlinmovieapp.R
+import com.mes.example.kotlinmovieapp.data.MoviesRepository
 import com.mes.example.kotlinmovieapp.databinding.FragmentMoviesPostersBinding
 import com.mes.example.kotlinmovieapp.delegates.MoviesPostersFragmentDelegate
 import com.mes.example.kotlinmovieapp.utils.SortTypes
@@ -45,7 +47,6 @@ class MoviesPostersFragment: Fragment(), MoviesPostersFragmentDelegate {
         binding.moviesRecyclerview.layoutManager = layoutManager
         binding.postersView = this
         binding.moviesViewModel = moviesPostersViewModel
-//        moviesPostersViewModel.getMovies()
         moviesPostersViewModel.updateMovies()
 
         binding.moviesRecyclerview.scrollStateChanges().subscribe {
@@ -63,6 +64,13 @@ class MoviesPostersFragment: Fragment(), MoviesPostersFragmentDelegate {
             }
         }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(moviesPostersViewModel.sortType == SortTypes.None) {
+            moviesPostersViewModel.getMovies()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -92,7 +100,7 @@ class MoviesPostersFragment: Fragment(), MoviesPostersFragmentDelegate {
 
     fun onPosterSelected(position: Int) {
         val intent = Intent(context, MovieDetailActivity::class.java)
-        intent.putExtra("MovieViewModel", moviesPostersViewModel.getMovieViewModelForPosterAt(position))
+        intent.putExtra("MovieDetailViewModel", Gson().toJson(moviesPostersViewModel.getMovieDetailViewModelForPosterAt(position)))
         startActivity(intent)
     }
 

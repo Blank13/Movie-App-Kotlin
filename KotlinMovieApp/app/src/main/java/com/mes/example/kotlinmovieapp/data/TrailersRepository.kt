@@ -7,8 +7,9 @@ import com.mes.example.kotlinmovieapp.networking.TrailersApiHelper
 import com.mes.example.kotlinmovieapp.utils.BASE_URL
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.io.Serializable
 
-class TrailersRepository {
+class TrailersRepository : Serializable {
 
     @SuppressLint("CheckResult")
     fun getTrailerForMovie(id: Int,

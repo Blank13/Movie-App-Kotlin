@@ -21,7 +21,6 @@ class MoviesPostersActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.menu_movie_posters, menu)
         return true
     }
 

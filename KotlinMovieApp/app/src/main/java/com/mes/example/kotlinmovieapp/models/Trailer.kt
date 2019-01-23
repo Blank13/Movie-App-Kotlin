@@ -1,16 +1,21 @@
 package com.mes.example.kotlinmovieapp.models
 
+//import org.parceler.Parcel
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import java.io.Serializable
 
-data class Trailer(
-    val id: String,
+open class Trailer(
+    @PrimaryKey
+    var id: String = "",
     @SerializedName("iso_3166_1")
-    val iso31661: String,
+    var iso31661: String = "",
     @SerializedName("iso_639_1")
-    val iso6391: String,
-    val key: String,
-    val name: String,
-    val site: String,
-    val size: Int,
-    val type: String
-)
+    var iso6391: String = "",
+    var key: String = "",
+    var name: String = "",
+    var site: String = "",
+    var size: Int = 0,
+    var type: String = ""
+): RealmObject(), Serializable {}

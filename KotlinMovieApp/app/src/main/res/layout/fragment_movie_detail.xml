@@ -88,12 +88,12 @@
                             app:layout_constraintStart_toStartOf="@+id/movie_detail_duration"
                             android:textSize="14sp"/>
                     <Button
-                            android:text="@string/save_to_favourite"
+                            android:text="@{movieDetailViewModel.isFavourite ? @string/delete_from_favourite : @string/save_to_favourite}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/favourite_button"
                             android:textAllCaps="false"
-                            android:onClick="@{() -> movieDetailViewModel.saveToFavourite()}"
+                            android:onClick="@{() -> movieDetailViewModel.favouriteButtonClicked()}"
                             android:layout_marginTop="8dp"
                             app:layout_constraintTop_toBottomOf="@+id/movie_detail_rate"
                             app:layout_constraintStart_toStartOf="parent"
@@ -143,6 +143,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/trailers_recycler_view"
+                    android:focusable="false"
                     android:orientation="horizontal"
                     app:trailerslist="@{movieDetailViewModel.trailersViewModels}"
                     app:layout_constraintBottom_toBottomOf="parent"
