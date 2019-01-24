@@ -1,5 +1,6 @@
 package com.mes.example.kotlinmovieapp.viewmodels
 
+import android.annotation.SuppressLint
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableBoolean
 import android.util.Log
@@ -24,27 +25,23 @@ class MoviesPostersViewModel: Serializable {
     private var lastSortType = SortTypes.PopularDec
     private var pageNumber = 1
 
+    @SuppressLint("CheckResult")
     fun getMovies(){
         lastSortType = sortType
         moviesViewModels.clear()
         isLoaderNeeded.set(true)
-        moviesRepository.getMovies({ movies ->
-            fromArray(movies).flatMapIterable { movies }
-                .map { MovieViewModel(it) }
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { moviesList ->
-                    moviesViewModels.addAll(moviesList)
-                    isLoaderNeeded.set(false)
-                }
-            isLoading.set(false)
-        },{ error ->
-            Log.e(LOGGER_TAG, error)
-            println(error)
-            isLoaderNeeded.set(false)
-            moviesPostersFragmentDelegate?.onGetingMoviesError(error)
-        })
+        val movies = moviesRepository.getMovies()
+        fromArray(movies).flatMapIterable { movies }
+            .map { MovieViewModel(it) }
+            .toList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { moviesList ->
+                moviesViewModels.addAll(moviesList)
+                isLoaderNeeded.set(false)
+            }
+        isLoading.set(false)
+
     }
 
     fun updateMovies() {

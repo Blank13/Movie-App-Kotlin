@@ -113,7 +113,7 @@ class MovieDetailViewModel(private var movie: Movie): Serializable {
         moviesRepository.saveMovie(movie)
     }
 
-    fun deleteFromFavourite(){
+    fun deleteFromFavourite() {
         moviesRepository.deleteMovie(movie.id)
     }
 }

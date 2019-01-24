@@ -72,6 +72,9 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:2.0.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7-kotlin:2.0.0'
 
+    // Realm Extensions
+    implementation "com.github.vicpinm:krealmextensions:2.4.0"
+
 }
 
 kapt {
